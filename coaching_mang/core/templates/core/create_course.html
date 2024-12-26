@@ -1,0 +1,21 @@
+<h1>Create Course</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Course</button>
+</form>
+
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<!-- Logout Button -->
+<a href="{% url 'custom_logout' %}"><button>Logout</button></a>
+
+<!-- Go back to the register page -->
+<a href="{% url 'register' %}"><button>Back to Register</button></a>

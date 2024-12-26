@@ -1,0 +1,22 @@
+<!-- Registration Page Template -->
+<h2>Register User</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<!-- Logout Button -->
+<a href="{% url 'custom_logout' %}"><button>Logout</button></a>
+
+<!-- Create Course Button for Admin -->
+{% if request.user.is_superuser %}
+    <a href="{% url 'create_course' %}"><button>Create Course</button></a>
+{% endif %}

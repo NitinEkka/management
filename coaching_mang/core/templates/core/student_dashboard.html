@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+</head>
+<body>
+
+<h1>Welcome, {{ student.user.username }}</h1>
+
+<!-- Display student information -->
+<ul>
+    <li><strong>Student ID:</strong> {{ student.student_id }}</li>
+    <li><strong>Roll Number:</strong> {{ student.roll_no }}</li>
+    <li><strong>Course:</strong> {{ student.course.name if student.course else "Not Assigned" }}</li>
+    <li><strong>Fee Paid:</strong> ₹{{ student.fee_paid }}</li>
+    <li><strong>Total Fee:</strong> ₹{{ student.total_fee }}</li>
+    <li><strong>Fee Due:</strong> ₹{{ student.fee_due }}</li>
+</ul>
+
+<!-- Logout Button -->
+<a href="{% url 'custom_logout' %}"><button>Logout</button></a>
+
+</body>
+</html>
