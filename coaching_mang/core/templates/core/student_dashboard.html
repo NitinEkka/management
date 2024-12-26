@@ -4,23 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Container to center content */
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        /* List Styles */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .value {
+            color: #333;
+        }
+
+        /* Fee-related info */
+        .fee-info {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* Button Styling */
+        .logout-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+            text-decoration: none;
+            width: 150px;
+        }
+
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Welcome, {{ student.user.username }}</h1>
+<div class="container">
+    <h1>Welcome, {{ student.user.username }}</h1>
 
-<!-- Display student information -->
-<ul>
-    <li><strong>Student ID:</strong> {{ student.student_id }}</li>
-    <li><strong>Roll Number:</strong> {{ student.roll_no }}</li>
-    <li><strong>Course:</strong> {{ student.course.name if student.course else "Not Assigned" }}</li>
-    <li><strong>Fee Paid:</strong> ₹{{ student.fee_paid }}</li>
-    <li><strong>Total Fee:</strong> ₹{{ student.total_fee }}</li>
-    <li><strong>Fee Due:</strong> ₹{{ student.fee_due }}</li>
-</ul>
+    <!-- Display student information -->
+    <ul>
+        <li><span class="label">Student ID:</span> <span class="value">{{ student.student_id }}</span></li>
+        <li><span class="label">Roll Number:</span> <span class="value">{{ student.roll_no }}</span></li>
+        
+        <!-- Display Course Name with fallback for not assigned courses -->
+        <li>
+            <span class="label">Course:</span> 
+            <span class="value">
+                {% if student.course %}
+                    {{ student.course.name }}
+                {% else %}
+                    Not Assigned
+                {% endif %}
+            </span>
+        </li>
 
-<!-- Logout Button -->
-<a href="{% url 'custom_logout' %}"><button>Logout</button></a>
+        <li><span class="label">Fee Paid:</span> <span class="value">₹{{ student.fee_paid }}</span></li>
+        <li><span class="label">Total Fee:</span> <span class="value">₹{{ student.total_fee }}</span></li>
+        <li><span class="label">Fee Due:</span> <span class="fee-info">₹{{ student.fee_due }}</span></li>
+    </ul>
+
+    <!-- Logout Button -->
+    <div class="button-container">
+        <a href="{% url 'custom_logout' %}" class="logout-btn">Logout</a>
+    </div>
+</div>
 
 </body>
 </html>

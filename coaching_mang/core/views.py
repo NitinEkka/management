@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import User, Course
+from .models import User, Course, Student, Staff
 from .forms import UserRegistrationForm, CourseForm
 
 # Login View
@@ -28,6 +28,27 @@ def custom_login(request):
     return render(request, 'core/login.html')
 
 # Register View (Only for Superuser)
+# @login_required
+# def register(request):
+#     if not request.user.is_superuser:
+#         return redirect('custom_login')  # Redirect non-admin users to login page
+
+#     if request.method == 'POST':
+#         form = UserRegistrationForm(request.POST)
+#         if form.is_valid():
+#             # Create and save the user object
+#             user = form.save(commit=False)
+#             user.set_password(form.cleaned_data['password'])  # Hash the password
+#             user.save()
+#             messages.success(request, f"User {user.username} has been registered successfully!")
+#             return redirect('register_page')  # Stay on the registration page after successful registration
+#         else:
+#             messages.error(request, 'Please correct the errors below.')
+#     else:
+#         form = UserRegistrationForm()
+
+#     return render(request, 'core/register.html', {'form': form})
+
 @login_required
 def register(request):
     if not request.user.is_superuser:
@@ -40,7 +61,20 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])  # Hash the password
             user.save()
-            messages.success(request, f"User {user.username} has been registered successfully!")
+
+            # Check the role and create the respective profile
+            role = form.cleaned_data['role']
+            if role == 'student':
+                # Create a student profile linked to the user
+                student = Student(user=user)
+                student.save()
+                messages.success(request, f"Student {user.username} has been registered successfully!")
+            elif role == 'staff':
+                # Create a staff profile linked to the user
+                staff = Staff(user=user)
+                staff.save()
+                messages.success(request, f"Staff member {user.username} has been registered successfully!")
+            
             return redirect('register_page')  # Stay on the registration page after successful registration
         else:
             messages.error(request, 'Please correct the errors below.')
@@ -55,11 +89,24 @@ def custom_logout(request):
     return redirect('custom_login')  # Redirect to login page after logout
 
 # Student Dashboard
+# @login_required
+# def student_dashboard(request):
+#     if request.user.role != 'student':
+#         return redirect('custom_login')  # Ensure only students can access this view
+#     return render(request, 'core/student_dashboard.html')
+
 @login_required
 def student_dashboard(request):
+
+    # Fetch the Student profile related to the current user
     if request.user.role != 'student':
-        return redirect('custom_login')  # Ensure only students can access this view
-    return render(request, 'core/student_dashboard.html')
+        return redirect('custom_login') 
+    student = Student.objects.get(user=request.user)
+    
+    
+    # Pass student data to the template
+    return render(request, 'core/student_dashboard.html', {'student': student})
+
 
 # Staff Dashboard
 @login_required
